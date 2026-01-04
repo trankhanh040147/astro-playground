@@ -1,0 +1,29 @@
+---
+// 1. Import the Layout (so it looks nice/consistent)
+import Layout from '../layouts/Layout.astro';
+
+// 2. Import the function to fetch content
+import { getCollection } from 'astro:content';
+
+// 3. Fetch all files from the 'labs' collection
+const allLabs = await getCollection('labs');
+---
+
+<Layout title="Markdown Laboratory">
+  <main style="padding: 2rem;">
+    <h1>My Markdown Playground</h1>
+    
+    <ul>
+      {allLabs.map((lab) => (
+        <li style="margin-bottom: 2rem; border: 1px solid #ccc; padding: 1rem;">
+          
+          <h2>{lab.data.title}</h2>
+          <p>{lab.data.description}</p>
+          
+          <pre>{JSON.stringify(lab.data, null, 2)}</pre>
+          
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>
