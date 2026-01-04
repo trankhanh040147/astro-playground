@@ -9,9 +9,7 @@ export default defineConfig({
   integrations: [mdx()],
   vite: {
     plugins: [
-      tailwindcss({
-        plugins: ['@tailwindcss/typography'],
-      })
+      tailwindcss({})
     ],
   },
 });
