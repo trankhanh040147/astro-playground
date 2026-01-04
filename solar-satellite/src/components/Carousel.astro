@@ -1,0 +1,70 @@
+---
+interface Props {
+  images: string[];
+}
+
+const { images } = Astro.props;
+// Create a unique ID for this instance so we can have multiple carousels on one page
+const id = 'carousel-' + Math.random().toString(36).substr(2, 9);
+---
+
+<div class="relative w-full max-w-2xl mx-auto group">
+  <div 
+    id={id}
+    class="flex overflow-x-auto gap-4 snap-x snap-mandatory scroll-smooth pb-4 no-scrollbar"
+    style="scrollbar-width: none;" 
+  > <!-- Firefox hide scrollbar -->
+    {images.map((src, index) => (
+      <div class="flex-shrink-0 w-full snap-center relative aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-gray-100">
+        <img 
+            src={src} 
+            alt={`Slide ${index + 1}`} 
+            class="w-full h-full object-cover"
+            loading="lazy"
+        />
+        <div class="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+            {index + 1} / {images.length}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <button data-target={id} data-action="prev" class="carousel-btn absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-30">
+    ←
+  </button>
+  <button data-target={id} data-action="next" class="carousel-btn absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-30">
+    →
+  </button>
+</div>
+
+<script>
+    // This function sets up the listeners. 
+    // We wrap it so we can run it on every page navigation (View Transitions).
+    function setupCarousels() {
+        const buttons = document.querySelectorAll('.carousel-btn');
+
+        buttons.forEach(btn => {
+            // Remove old listeners to prevent duplicates if re-running
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode?.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', (e) => {
+                const targetId = (e.currentTarget as HTMLElement).dataset.target;
+                const action = (e.currentTarget as HTMLElement).dataset.action;
+                const track = document.getElementById(targetId!);
+
+                if (track) {
+                    const scrollAmount = track.clientWidth;
+                    if (action === 'next') track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    if (action === 'prev') track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                }
+            });
+        });
+    }
+
+    // Run on initial load
+    setupCarousels();
+
+    // Run whenever the page changes (for View Transitions)
+    document.addEventListener('astro:page-load', setupCarousels);
+</script>

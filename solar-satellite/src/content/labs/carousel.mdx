@@ -1,0 +1,21 @@
+---
+title: "Interactive Carousel"
+description: "Testing a client-side interactive component inside Markdown."
+tags: ["component", "interactive"]
+---
+import Carousel from '../../components/Carousel.astro';
+
+# The Gallery
+
+Here is a fully functional carousel embedded directly into my markdown file. I can mix text, code, and UI elements.
+
+<Carousel images={[
+  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+  "https://images.unsplash.com/photo-1767173582616-df7ce14e874c?w=800&q=80",
+  "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&q=80"
+]} />
+
+### How it works
+1. **Snap Scrolling:** We use CSS `snap-x` so it stops perfectly on images.
+2. **Lazy Loading:** The images only load when they are near the viewport.
+3. **No Frameworks:** This uses zero React/Vue. Just standard HTML/JS.
