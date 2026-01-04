@@ -6,24 +6,34 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 // 3. Fetch all files from the 'labs' collection
-const allLabs = await getCollection('labs');
+const rawLabs = await getCollection('labs');
+
+const labs = await Promise.all(rawLabs.map(async (lab) => {
+  const content = await lab.render();
+  return {
+    ...lab.data,
+    content,
+  };
+}));
 ---
 
 <Layout title="Markdown Laboratory">
-  <main style="padding: 2rem;">
-    <h1>My Markdown Playground</h1>
+  <main class="max-w-3xl mx-auto p-10">
+    <h1 class="text-4xl font-bold mb-8">My Markdown Playground</h1>
     
-    <ul>
-      {allLabs.map((lab) => (
-        <li style="margin-bottom: 2rem; border: 1px solid #ccc; padding: 1rem;">
-          
-          <h2>{lab.data.title}</h2>
-          <p>{lab.data.description}</p>
-          
-          <pre>{JSON.stringify(lab.data, null, 2)}</pre>
-          
-        </li>
-      ))}
-    </ul>
+    {labs.map((lab) => (
+      <article class="mb-12 border-2 border-gray-200 rounded-xl overflow-hidden shadow-sm">
+        
+        <header class="bg-gray-50 p-6 border-b border-gray-200">
+          <h2 class="text-2xl font-bold text-gray-800">{lab.title}</h2>
+          <p class="text-gray-600 mt-2">{lab.description}</p>
+        </header>
+
+        <div class="p-6 prose prose-lg max-w-none">
+          <lab.content.Content />
+        </div>
+        
+      </article>
+    ))}
   </main>
 </Layout>
