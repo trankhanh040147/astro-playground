@@ -1,6 +1,6 @@
 ---
 // 1. Import the Layout (so it looks nice/consistent)
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 
 // 2. Import the function to fetch content
 import { getCollection } from 'astro:content';
@@ -18,7 +18,7 @@ const labs = await Promise.all(rawLabs.map(async (lab) => {
 ---
 
 <Layout title="Markdown Laboratory">
-  <main class="max-w-3xl mx-auto p-10">
+  <main class="max-w-3xl mx-auto p-10" transition:animate="slide">
     <h1 class="text-4xl font-bold mb-8">My Markdown Playground</h1>
     
     {labs.map((lab) => (
